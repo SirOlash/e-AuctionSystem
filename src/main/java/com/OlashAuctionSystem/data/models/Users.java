@@ -15,7 +15,8 @@ import java.math.BigDecimal;
 public class Users {
     @Id
     private String id;
-    private String bvn;
+    private String NIN;
+    private String userName;
     private String email;
     private String password;
     private Role role;
