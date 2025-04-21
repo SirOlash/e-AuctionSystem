@@ -5,6 +5,7 @@ import com.OlashAuctionSystem.dto.response.UserRegistrationResponse;
 import com.OlashAuctionSystem.exceptions.DuplicateEmailException;
 import com.OlashAuctionSystem.exceptions.DuplicateUserNameException;
 import com.OlashAuctionSystem.exceptions.IncorrectPasswordException;
+import com.OlashAuctionSystem.services.userservices.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

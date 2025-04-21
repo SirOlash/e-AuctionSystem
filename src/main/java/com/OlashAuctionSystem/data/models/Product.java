@@ -20,4 +20,5 @@ public class Product {
     private ProductCategory category;
     private BigDecimal startingPrice;
     private String imageUrl;
+    private Status status;
 }

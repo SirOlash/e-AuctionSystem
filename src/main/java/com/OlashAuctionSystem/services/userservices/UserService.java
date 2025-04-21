@@ -1,18 +1,19 @@
-package com.OlashAuctionSystem.services;
+package com.OlashAuctionSystem.services.userservices;
 
 import com.OlashAuctionSystem.data.models.Users;
 import com.OlashAuctionSystem.data.repositories.UserRepository;
+import com.OlashAuctionSystem.dto.request.UserLoginRequest;
 import com.OlashAuctionSystem.dto.request.UserRegistrationRequest;
+import com.OlashAuctionSystem.dto.response.UserLoginResponse;
 import com.OlashAuctionSystem.dto.response.UserRegistrationResponse;
-import com.OlashAuctionSystem.exceptions.DuplicateNINException;
-import com.OlashAuctionSystem.exceptions.DuplicateEmailException;
-import com.OlashAuctionSystem.exceptions.DuplicateUserNameException;
-import com.OlashAuctionSystem.exceptions.IncorrectPasswordException;
+import com.OlashAuctionSystem.exceptions.*;
+import com.OlashAuctionSystem.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 @Service
 public class UserService implements IUserActivities {
@@ -21,7 +22,10 @@ public class UserService implements IUserActivities {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder encoder;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Override
     public UserRegistrationResponse registerUser(UserRegistrationRequest userRegistrationRequest) {
@@ -41,14 +45,14 @@ public class UserService implements IUserActivities {
         }
 
         Users user = new Users();
-        String hashedNIN = encoder.encode(userRegistrationRequest.getNin());
+        String hashedNIN = passwordEncoder.encode(userRegistrationRequest.getNin());
         user.setNIN(hashedNIN);
 
         user.setUserName(userRegistrationRequest.getUserName());
         user.setEmail(userRegistrationRequest.getEmail());
         user.setRole(userRegistrationRequest.getRole());
 
-        String hashedPassword = encoder.encode(userRegistrationRequest.getPassword());
+        String hashedPassword = passwordEncoder.encode(userRegistrationRequest.getPassword());
         user.setPassword(hashedPassword);
 
         user.setBalance(BigDecimal.ZERO);
@@ -63,6 +67,31 @@ public class UserService implements IUserActivities {
                 .message("You have Registered Successfully !!!")
                 .build();
     }
+
+    @Override
+    public UserLoginResponse loginUser(UserLoginRequest loginRequest){
+        Users user = userRepository.findByEmail(loginRequest.getUsernameOrEmail())
+                .or(() -> userRepository.findByUserName(loginRequest.getUsernameOrEmail()))
+                .orElseThrow(() -> new InvalidCredentialException("Invalid Credentials"));
+
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            throw new InvalidCredentialException("Invalid Credentials");
+        }
+
+        Map<String, Object> claims = Map.of(
+                "id", user.getId(),
+                "email",user.getEmail(),
+                "username",user.getUserName(),
+                "role", user.getRole().name()
+        );
+        String token = jwtUtil.generateToken(claims, user.getEmail(),user.getRole());
+
+        return UserLoginResponse.builder()
+                .token(token)
+                .message("User: " + user.getUserName() + " logged in Successfully")
+                .build();
+    }
+
 
     @Override
     public void deleteAll() {
