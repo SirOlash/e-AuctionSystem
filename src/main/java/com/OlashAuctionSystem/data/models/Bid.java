@@ -7,18 +7,18 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Document(collection = "products")
-public class Product {
+@Document(collection = "bids")
+public class Bid {
     @Id
     private String id;
-    private String name;
-    private String description;
-    private ProductCategory category;
-    private BigDecimal startingPrice;
-    private String imageUrl;
-    private ProductStatus productStatus;
+    private String auctionId;
+    private String bidderId;
+    private BigDecimal amount;
+    private LocalDateTime timestamp;
+
 }

@@ -1,5 +1,6 @@
 package com.OlashAuctionSystem.exceptions;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -57,10 +58,45 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(AuctionNotFoundException.class)
+    public ResponseEntity<Map<String,String>> handleAuctionNotFoundException(AuctionNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("Error", ex.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<Map<String,String>> handleProductNotFoundException(ProductNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("Error", ex.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AuctionClosedException.class)
+    public ResponseEntity<Map<String,String>> handleAuctionClosedException(AuctionClosedException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("Error", ex.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.GONE);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<Map<String,String>> handleJwtExpired(ExpiredJwtException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("Error", "Session expired; please log in again!!");
+        return new ResponseEntity<>(errors, HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(IncorrectPasswordException.class)
     public ResponseEntity<Map<String, String>> handleIncorrectPasswordException(IncorrectPasswordException ex) {
         Map<String, String> errors = new HashMap<>();
         errors.put("Password", ex.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidBidException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidBidException(InvalidBidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("Error", ex.getMessage());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 

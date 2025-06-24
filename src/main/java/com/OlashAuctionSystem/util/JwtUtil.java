@@ -20,15 +20,22 @@ public class JwtUtil {
 
     public String generateToken(Map<String, Object> extraClaims, String subject, Role role) {
         Date now = new Date();
-        long ttl = switch(role){
-            case ADMIN -> 1800000;
-            default -> 1200000;
-        };
+        long expirationTime;
+        if (role == Role.ADMIN){
+            expirationTime = 1800000;
+        }
+        else {
+            expirationTime = 1200000;
+        }
+//        long expirationTime = switch(role){
+//            case ADMIN -> 1800000;
+//            default -> 1200000;
+//        };
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(subject)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + ttl))
+                .setExpiration(new Date(now.getTime() + expirationTime))
                 .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
     }

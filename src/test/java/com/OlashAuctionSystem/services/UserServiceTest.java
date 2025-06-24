@@ -27,7 +27,7 @@ class UserServiceTest {
         userService.deleteAll();
 
         UserRegistrationRequest newUser = new UserRegistrationRequest();
-        newUser.setNIN("12345678912");
+        newUser.setNin("12345678912");
         newUser.setUserName("Olash");
         newUser.setEmail("emmy@gmail.com");
         newUser.setPassword("password");
@@ -54,7 +54,7 @@ class UserServiceTest {
         assertNotNull(regResponse);
 
         UserRegistrationRequest user2 = new UserRegistrationRequest();
-        user2.setNIN("12345678913");
+        user2.setNin("12345678913");
         user2.setUserName("Ola");
         user2.setEmail("emmy@gmail.com");
         user2.setPassword("password");
@@ -69,7 +69,7 @@ class UserServiceTest {
         assertNotNull(regResponse);
 
         UserRegistrationRequest user2 = new UserRegistrationRequest();
-        user2.setNIN("12345678913");
+        user2.setNin("12345678913");
         user2.setUserName("Olash");
         user2.setEmail("olash@gmail.com");
         user2.setPassword("password");
@@ -84,7 +84,7 @@ class UserServiceTest {
         assertNotNull(regResponse);
 
         UserRegistrationRequest user2 = new UserRegistrationRequest();
-        user2.setNIN("12345678913");
+        user2.setNin("12345678913");
         user2.setUserName("Ola");
         user2.setEmail("olash@gmail.com");
         user2.setPassword("password");

@@ -1,7 +1,7 @@
 package com.OlashAuctionSystem.dto.response;
 
 import com.OlashAuctionSystem.data.models.ProductCategory;
-import com.OlashAuctionSystem.data.models.Status;
+import com.OlashAuctionSystem.data.models.ProductStatus;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,6 +16,6 @@ public class CreateProductResponse {
     private ProductCategory productCategory;
     private BigDecimal startingPrice;
     private String imageUrl;
-    private Status status;
+    private ProductStatus productStatus;
     private String message;
 }

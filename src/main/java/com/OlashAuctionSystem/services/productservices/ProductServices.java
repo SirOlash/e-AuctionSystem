@@ -2,7 +2,7 @@ package com.OlashAuctionSystem.services.productservices;
 
 import com.OlashAuctionSystem.data.models.Product;
 import com.OlashAuctionSystem.data.models.Role;
-import com.OlashAuctionSystem.data.models.Status;
+import com.OlashAuctionSystem.data.models.ProductStatus;
 import com.OlashAuctionSystem.data.models.Users;
 import com.OlashAuctionSystem.data.repositories.ProductRepository;
 import com.OlashAuctionSystem.data.repositories.UserRepository;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class ProductServices implements IProductActivities{
     @Autowired
     private JwtUtil jwtUtil;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -29,6 +30,7 @@ public class ProductServices implements IProductActivities{
     @Autowired
     private FileStorageService fileStorage;
 
+    @Override
     public CreateProductResponse addProduct(String jwtToken, CreateProductRequest productRequest){
         String token = jwtToken.startsWith("Bearer") ? jwtToken.substring(7) : jwtToken;
         String email = jwtUtil.extractSubject(token);
@@ -46,7 +48,7 @@ public class ProductServices implements IProductActivities{
         product.setCategory(productRequest.getCategory());
         product.setStartingPrice(productRequest.getStartingPrice());
         product.setImageUrl(imageUrl);
-        product.setStatus(Status.PENDING);
+        product.setProductStatus(ProductStatus.PENDING);
 
         Product savedProduct = productRepository.save(product);
 
@@ -57,7 +59,7 @@ public class ProductServices implements IProductActivities{
                 .productCategory(savedProduct.getCategory())
                 .startingPrice(savedProduct.getStartingPrice())
                 .imageUrl(imageUrl)
-                .status(savedProduct.getStatus())
+                .productStatus(savedProduct.getProductStatus())
                 .message("You have Successfully added a product")
                 .build();
     }
